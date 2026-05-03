@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Login - KOMU RABBIT DIS{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <div class="logo">
+                <h1>🐰 KOMU RABBIT</h1>
+                <p>Decision Information System</p>
+            </div>
+        </div>
+        
+        <form class="login-form" method="POST" action="{{ url_for('auth.login') }}">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Enter your password">
+            </div>
+            
+            <div class="form-options">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="remember">
+                    <span class="checkmark"></span>
+                    Remember me
+                </label>
+                <a href="#" class="forgot-password">Forgot password?</a>
+            </div>
+            
+            <button type="submit" class="login-btn">Sign In</button>
+        </form>
+        
+        <div class="login-footer">
+            <p>Don't have an account? <a href="#">Contact Administrator</a></p>
+        </div>
+    </div>
+    
+    <div class="background-pattern"></div>
+</div>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth/login.css') }}">
+<script src="{{ url_for('static', filename='js/auth/login.js') }}"></script>
+{% endblock %}

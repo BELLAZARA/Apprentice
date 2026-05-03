@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Growth Tracking - Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/sidebar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/growth/list.css') }}">
+</head>
+<body>
+    <div class="admin-layout">
+        {% include 'admin/sidebar.html' %}
+        
+        <main class="main-content">
+            <header class="main-header">
+                <h1>Growth Tracking</h1>
+                <div class="header-actions">
+                    <button class="btn-primary" onclick="openModal('add-growth-modal')">
+                        <span class="btn-icon">➕</span>
+                        Record Weight
+                    </button>
+                </div>
+            </header>
+            
+            <div class="content-section">
+                <!-- Growth Stats -->
+                <section class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-number">{{ stats.weights_this_week }}</div>
+                        <div class="stat-label">Weights This Week</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">{{ stats.average_weight_gain }}g</div>
+                        <div class="stat-label">Avg Weekly Gain</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">{{ stats.underweight_rabbits }}</div>
+                        <div class="stat-label">Underweight Rabbits</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">{{ stats.growth_rate }}%</div>
+                        <div class="stat-label">Growth Rate</div>
+                    </div>
+                </section>
+                
+                <!-- Growth Chart -->
+                <section class="chart-section">
+                    <div class="section-header">
+                        <h2>Growth Trends</h2>
+                        <div class="chart-actions">
+                            <select id="period-filter">
+                                <option value="week">Last Week</option>
+                                <option value="month" selected>Last Month</option>
+                                <option value="quarter">Last Quarter</option>
+                                <option value="year">Last Year</option>
+                            </select>
+                            <button class="btn-secondary" onclick="refreshChart()">
+                                <span class="btn-icon">🔄</span>
+                                Refresh
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="growth-chart" width="800" height="400"></canvas>
+                    </div>
+                </section>
+                
+                <!-- Recent Growth Records -->
+                <section class="records-section">
+                    <div class="section-header">
+                        <h2>Recent Growth Records</h2>
+                        <div class="records-actions">
+                            <select id="rabbit-filter">
+                                <option value="">All Rabbits</option>
+                                {% for rabbit in active_rabbits %}
+                                <option value="{{ rabbit.id }}">{{ rabbit.rabbit_id }}</option>
+                                {% endfor %}
+                            </select>
+                            <select id="measurement-filter">
+                                <option value="">All Measurements</option>
+                                <option value="regular">Regular</option>
+                                <option value="birth">Birth</option>
+                                <option value="weaning">Weaning</option>
+                            </select>
+                            <button class="btn-secondary" onclick="exportRecords()">
+                                <span class="btn-icon">📥</span>
+                                Export
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="growth-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Rabbit ID</th>
+                                    <th>Weight (g)</th>
+                                    <th>Age (weeks)</th>
+                                    <th>Measurement Type</th>
+                                    <th>Weight Change</th>
+                                    <th>Growth Rate</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for record in growth_records %}
+                                <tr>
+                                    <td>{{ record.date_measured.strftime('%Y-%m-%d') }}</td>
+                                    <td>
+                                        <span class="rabbit-id">{{ record.rabbit_id }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="weight-value">{{ record.weight }}</span>
+                                    </td>
+                                    <td>{{ record.age_weeks or 'N/A' }}</td>
+                                    <td>
+                                        <span class="measurement-badge measurement-{{ record.measurement_type }}">
+                                            {{ record.measurement_type.title() }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if record.weight_change %}
+                                        <span class="weight-change {{ 'positive' if record.weight_change > 0 else 'negative' if record.weight_change < 0 else 'neutral' }}">
+                                            {{ record.weight_change > 0 and '+' or '' }}{{ record.weight_change }}g
+                                        </span>
+                                        {% else %}
+                                        <span class="no-change">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if record.growth_rate %}
+                                        <span class="growth-rate {{ 'good' if record.growth_rate > 0 else 'poor' if record.growth_rate < 0 else 'neutral' }}">
+                                            {{ record.growth_rate > 0 and '+' or '' }}{{ record.growth_rate }}%
+                                        </span>
+                                        {% else %}
+                                        <span class="no-change">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-view" onclick="viewDetails('{{ record.id }}')" title="View">
+                                                👁️
+                                            </button>
+                                            <button class="btn-edit" onclick="editRecord('{{ record.id }}')" title="Edit">
+                                                ✏️
+                                            </button>
+                                            <button class="btn-delete" onclick="deleteRecord('{{ record.id }}')" title="Delete">
+                                                🗑️
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                
+                <!-- Underweight Rabbits -->
+                <section class="alerts-section">
+                    <div class="section-header">
+                        <h2>Underweight Rabbits</h2>
+                        <div class="alerts-actions">
+                            <button class="btn-primary" onclick="createFeedingPlan()">
+                                <span class="btn-icon">🌿</span>
+                                Create Feeding Plan
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="alerts-grid">
+                        {% for rabbit in underweight_rabbits %}
+                        <div class="alert-card alert-warning" data-rabbit-id="{{ rabbit.id }}">
+                            <div class="alert-header">
+                                <div class="alert-icon">⚠️</div>
+                                <div class="alert-title">{{ rabbit.rabbit_id }}</div>
+                                <div class="alert-severity">Underweight</div>
+                            </div>
+                            <div class="alert-content">
+                                <div class="alert-message">Current weight: {{ rabbit.current_weight }}g (Expected: {{ rabbit.expected_weight }}g)</div>
+                                <div class="alert-details">
+                                    <div class="detail-row">
+                                        <span class="detail-label">Age:</span>
+                                        <span class="detail-value">{{ rabbit.age_weeks }} weeks</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="detail-label">Weight Deficit:</span>
+                                        <span class="detail-value">{{ rabbit.weight_deficit }}g</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="detail-label">Last Measured:</span>
+                                        <span class="detail-value">{{ rabbit.last_measured }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="alert-actions">
+                                <button class="btn-primary" onclick="recordWeight('{{ rabbit.id }}')">
+                                    <span class="btn-icon">📏</span>
+                                    Record Weight
+                                </button>
+                                <button class="btn-secondary" onclick="viewGrowthHistory('{{ rabbit.id }}')">
+                                    <span class="btn-icon">📈</span>
+                                    View History
+                                </button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Add Growth Record Modal -->
+    <div id="add-growth-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Record Weight Measurement</h3>
+                <button class="modal-close" onclick="closeModal('add-growth-modal')">&times;</button>
+            </div>
+            <form class="modal-form" id="add-growth-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="rabbit-select">Rabbit *</label>
+                        <select id="rabbit-select" name="rabbit_id" required>
+                            <option value="">Select Rabbit</option>
+                            {% for rabbit in active_rabbits %}
+                            <option value="{{ rabbit.id }}">{{ rabbit.rabbit_id }} - {{ rabbit.breed }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="measurement-date">Measurement Date *</label>
+                        <input type="date" id="measurement-date" name="date_measured" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="weight">Weight (g) *</label>
+                        <input type="number" id="weight" name="weight" required min="0" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label for="age-weeks">Age (weeks)</label>
+                        <input type="number" id="age-weeks" name="age_weeks" min="0">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="measurement-type">Measurement Type *</label>
+                        <select id="measurement-type" name="measurement_type" required>
+                            <option value="regular">Regular</option>
+                            <option value="birth">Birth</option>
+                            <option value="weaning">Weaning</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="auto-calculate">Auto-calculate Age</label>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="auto-calculate" name="auto_calculate" checked>
+                            <label for="auto-calculate">Calculate from date of birth</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="notes">Notes</label>
+                    <textarea id="notes" name="notes" rows="3" placeholder="Additional notes about the measurement..."></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('add-growth-modal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Record Weight</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/admin/sidebar.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/admin/growth/list.js') }}"></script>
+</body>
+</html>

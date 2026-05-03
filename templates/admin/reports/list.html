@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/sidebar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/reports/list.css') }}">
+</head>
+<body>
+    <div class="admin-layout">
+        {% include 'admin/sidebar.html' %}
+        
+        <main class="main-content">
+            <header class="main-header">
+                <h1>Reports & Analytics</h1>
+                <div class="header-actions">
+                    <button class="btn-primary" onclick="openModal('custom-report-modal')">
+                        <span class="btn-icon">📊</span>
+                        Custom Report
+                    </button>
+                </div>
+            </header>
+            
+            <div class="content-section">
+                <!-- Quick Stats -->
+                <section class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-number">{{ stats.total_rabbits }}</div>
+                        <div class="stat-label">Total Rabbits</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">KES {{ stats.monthly_revenue | round(0) }}</div>
+                        <div class="stat-label">Monthly Revenue</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">{{ stats.birth_rate }}%</div>
+                        <div class="stat-label">Birth Rate</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">{{ stats.health_score }}%</div>
+                        <div class="stat-label">Health Score</div>
+                    </div>
+                </section>
+                
+                <!-- Standard Reports -->
+                <section class="reports-section">
+                    <div class="section-header">
+                        <h2>Standard Reports</h2>
+                        <div class="reports-actions">
+                            <select id="period-filter">
+                                <option value="week">This Week</option>
+                                <option value="month" selected>This Month</option>
+                                <option value="quarter">This Quarter</option>
+                                <option value="year">This Year</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="reports-grid">
+                        <div class="report-card" onclick="generateReport('production')">
+                            <div class="report-icon">📈</div>
+                            <div class="report-info">
+                                <h3>Production Report</h3>
+                                <p>Rabbits, breeding, births, and growth metrics</p>
+                            </div>
+                            <div class="report-actions">
+                                <span class="report-status">Available</span>
+                            </div>
+                        </div>
+                        
+                        <div class="report-card" onclick="generateReport('financial')">
+                            <div class="report-icon">💰</div>
+                            <div class="report-info">
+                                <h3>Financial Report</h3>
+                                <p>Revenue, expenses, sales, and profitability</p>
+                            </div>
+                            <div class="report-actions">
+                                <span class="report-status">Available</span>
+                            </div>
+                        </div>
+                        
+                        <div class="report-card" onclick="generateReport('health')">
+                            <div class="report-icon">🩺</div>
+                            <div class="report-info">
+                                <h3>Health Report</h3>
+                                <p>Disease, treatments, vaccinations, and mortality</p>
+                            </div>
+                            <div class="report-actions">
+                                <span class="report-status">Available</span>
+                            </div>
+                        </div>
+                        
+                        <div class="report-card" onclick="generateReport('feeding')">
+                            <div class="report-icon">🌿</div>
+                            <div class="report-info">
+                                <h3>Feeding Report</h3>
+                                <p>Feed consumption, costs, and efficiency</p>
+                            </div>
+                            <div class="report-actions">
+                                <span class="report-status">Available</span>
+                            </div>
+                        </div>
+                        
+                        <div class="report-card" onclick="generateReport('staff')">
+                            <div class="report-icon">👥</div>
+                            <div class="report-info">
+                                <h3>Staff Performance</h3>
+                                <p>Task completion, efficiency, and workload</p>
+                            </div>
+                            <div class="report-actions">
+                                <span class="report-status">Available</span>
+                            </div>
+                        </div>
+                        
+                        <div class="report-card" onclick="generateReport('inventory')">
+                            <div class="report-icon">📦</div>
+                            <div class="report-info">
+                                <h3>Inventory Report</h3>
+                                <p>Feed, supplies, and equipment status</p>
+                            </div>
+                            <div class="report-actions">
+                                <span class="report-status">Available</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Key Metrics Dashboard -->
+                <section class="metrics-section">
+                    <div class="section-header">
+                        <h2>Key Performance Metrics</h2>
+                        <div class="metrics-actions">
+                            <button class="btn-secondary" onclick="exportMetrics()">
+                                <span class="btn-icon">📥</span>
+                                Export Metrics
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <h3>Growth Performance</h3>
+                                <span class="metric-period">Last 30 days</span>
+                            </div>
+                            <div class="metric-content">
+                                <div class="metric-chart">
+                                    <canvas id="growth-chart" width="200" height="100"></canvas>
+                                </div>
+                                <div class="metric-stats">
+                                    <div class="stat-row">
+                                        <span class="stat-label">Avg Growth:</span>
+                                        <span class="stat-value">{{ metrics.growth.avg_growth }}g/week</span>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span class="stat-label">Target Met:</span>
+                                        <span class="stat-value">{{ metrics.growth.target_met }}%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <h3>Revenue Trends</h3>
+                                <span class="metric-period">Last 30 days</span>
+                            </div>
+                            <div class="metric-content">
+                                <div class="metric-chart">
+                                    <canvas id="revenue-chart" width="200" height="100"></canvas>
+                                </div>
+                                <div class="metric-stats">
+                                    <div class="stat-row">
+                                        <span class="stat-label">Total Revenue:</span>
+                                        <span class="stat-value">KES {{ metrics.revenue.total | round(0) }}</span>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span class="stat-label">Growth:</span>
+                                        <span class="stat-value">{{ metrics.revenue.growth }}%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <h3>Health Status</h3>
+                                <span class="metric-period">Current</span>
+                            </div>
+                            <div class="metric-content">
+                                <div class="metric-chart">
+                                    <canvas id="health-chart" width="200" height="100"></canvas>
+                                </div>
+                                <div class="metric-stats">
+                                    <div class="stat-row">
+                                        <span class="stat-label">Health Score:</span>
+                                        <span class="stat-value">{{ metrics.health.score }}%</span>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span class="stat-label">Issues:</span>
+                                        <span class="stat-value">{{ metrics.health.active_issues }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <h3>Feeding Efficiency</h3>
+                                <span class="metric-period">Last 30 days</span>
+                            </div>
+                            <div class="metric-content">
+                                <div class="metric-chart">
+                                    <canvas id="feeding-chart" width="200" height="100"></canvas>
+                                </div>
+                                <div class="metric-stats">
+                                    <div class="stat-row">
+                                        <span class="stat-label">Efficiency:</span>
+                                        <span class="stat-value">{{ metrics.feeding.efficiency }}%</span>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span class="stat-label">Cost/kg:</span>
+                                        <span class="stat-value">KES {{ metrics.feeding.cost_per_kg }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Recent Reports -->
+                <section class="recent-section">
+                    <div class="section-header">
+                        <h2>Generated Reports</h2>
+                        <div class="recent-actions">
+                            <button class="btn-secondary" onclick="viewAllReports()">
+                                <span class="btn-icon">📋</span>
+                                View All
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="reports-list">
+                        {% for report in recent_reports %}
+                        <div class="report-item">
+                            <div class="report-info">
+                                <div class="report-title">{{ report.title }}</div>
+                                <div class="report-details">
+                                    <span class="report-type">{{ report.type }}</span>
+                                    <span class="report-period">{{ report.period }}</span>
+                                    <span class="report-date">{{ report.generated_date.strftime('%Y-%m-%d %H:%M') }}</span>
+                                </div>
+                            </div>
+                            <div class="report-actions">
+                                <button class="btn-primary" onclick="downloadReport('{{ report.id }}')">
+                                    <span class="btn-icon">📥</span>
+                                    Download
+                                </button>
+                                <button class="btn-secondary" onclick="viewReport('{{ report.id }}')">
+                                    <span class="btn-icon">👁️</span>
+                                    View
+                                </button>
+                                <button class="btn-delete" onclick="deleteReport('{{ report.id }}')">
+                                    <span class="btn-icon">🗑️</span>
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </section>
+                
+                <!-- Scheduled Reports -->
+                <section class="scheduled-section">
+                    <div class="section-header">
+                        <h2>Scheduled Reports</h2>
+                        <div class="scheduled-actions">
+                            <button class="btn-primary" onclick="openModal('schedule-modal')">
+                                <span class="btn-icon">➕</span>
+                                Schedule Report
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="scheduled-list">
+                        {% for scheduled in scheduled_reports %}
+                        <div class="scheduled-item">
+                            <div class="scheduled-info">
+                                <div class="scheduled-title">{{ scheduled.title }}</div>
+                                <div class="scheduled-details">
+                                    <span class="scheduled-frequency">{{ scheduled.frequency }}</span>
+                                    <span class="scheduled-next">{{ scheduled.next_run }}</span>
+                                    <span class="scheduled-recipients">{{ scheduled.recipients }} recipients</span>
+                                </div>
+                            </div>
+                            <div class="scheduled-actions">
+                                <button class="btn-secondary" onclick="editScheduled('{{ scheduled.id }}')">
+                                    <span class="btn-icon">✏️</span>
+                                    Edit
+                                </button>
+                                <button class="btn-secondary" onclick="runNow('{{ scheduled.id }}')">
+                                    <span class="btn-icon">▶️</span>
+                                    Run Now
+                                </button>
+                                <button class="btn-delete" onclick="deleteScheduled('{{ scheduled.id }}')">
+                                    <span class="btn-icon">🗑️</span>
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Custom Report Modal -->
+    <div id="custom-report-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Generate Custom Report</h3>
+                <button class="modal-close" onclick="closeModal('custom-report-modal')">&times;</button>
+            </div>
+            <form class="modal-form" id="custom-report-form">
+                <div class="form-group">
+                    <label for="report-title">Report Title *</label>
+                    <input type="text" id="report-title" name="title" required placeholder="Enter report title">
+                </div>
+                
+                <div class="form-group">
+                    <label for="report-type">Report Type *</label>
+                    <select id="report-type" name="type" required>
+                        <option value="">Select Report Type</option>
+                        <option value="production">Production</option>
+                        <option value="financial">Financial</option>
+                        <option value="health">Health</option>
+                        <option value="feeding">Feeding</option>
+                        <option value="breeding">Breeding</option>
+                        <option value="sales">Sales</option>
+                        <option value="staff">Staff Performance</option>
+                        <option value="inventory">Inventory</option>
+                    </select>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="start-date">Start Date *</label>
+                        <input type="date" id="start-date" name="start_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="end-date">End Date *</label>
+                        <input type="date" id="end-date" name="end_date" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="report-metrics">Metrics to Include</label>
+                    <div class="checkbox-group">
+                        {% for metric in available_metrics %}
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="metric-{{ metric.id }}" name="metrics" value="{{ metric.id }}">
+                            <label for="metric-{{ metric.id }}">{{ metric.name }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="report-format">Output Format *</label>
+                    <select id="report-format" name="format" required>
+                        <option value="pdf">PDF</option>
+                        <option value="excel">Excel</option>
+                        <option value="csv">CSV</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="report-description">Description</label>
+                    <textarea id="report-description" name="description" rows="3" placeholder="Optional description of the report..."></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('custom-report-modal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Generate Report</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Schedule Report Modal -->
+    <div id="schedule-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Schedule Automated Report</h3>
+                <button class="modal-close" onclick="closeModal('schedule-modal')">&times;</button>
+            </div>
+            <form class="modal-form" id="schedule-form">
+                <div class="form-group">
+                    <label for="schedule-title">Report Title *</label>
+                    <input type="text" id="schedule-title" name="title" required placeholder="Enter report title">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="schedule-type">Report Type *</label>
+                        <select id="schedule-type" name="type" required>
+                            <option value="">Select Report Type</option>
+                            <option value="production">Production</option>
+                            <option value="financial">Financial</option>
+                            <option value="health">Health</option>
+                            <option value="feeding">Feeding</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="schedule-frequency">Frequency *</label>
+                        <select id="schedule-frequency" name="frequency" required>
+                            <option value="">Select Frequency</option>
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="quarterly">Quarterly</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="schedule-recipients">Email Recipients *</label>
+                    <input type="text" id="schedule-recipients" name="recipients" required placeholder="Enter email addresses separated by commas">
+                </div>
+                
+                <div class="form-group">
+                    <label for="schedule-time">Time of Day</label>
+                    <input type="time" id="schedule-time" name="time" value="09:00">
+                </div>
+                
+                <div class="form-group">
+                    <label for="schedule-description">Description</label>
+                    <textarea id="schedule-description" name="description" rows="2" placeholder="Optional description..."></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('schedule-modal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Schedule Report</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/admin/sidebar.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/admin/reports/list.js') }}"></script>
+</body>
+</html>

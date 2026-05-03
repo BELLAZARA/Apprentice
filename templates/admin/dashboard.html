@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Komu Rabbit DIS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/sidebar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/dashboard.css') }}">
+</head>
+<body>
+    <div class="admin-layout">
+        {% include 'admin/sidebar.html' %}
+        
+        <main class="main-content">
+            <header class="main-header">
+                <h1>Admin Dashboard</h1>
+                <div class="header-actions">
+                    <span class="current-time">{{ current_time }}</span>
+                </div>
+            </header>
+            
+            <div class="dashboard-content">
+                <!-- Key Stats -->
+                <section class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">🐇</div>
+                        <div class="stat-info">
+                            <div class="stat-number">{{ stats.total_rabbits }}</div>
+                            <div class="stat-label">Total Rabbits</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">💕</div>
+                        <div class="stat-info">
+                            <div class="stat-number">{{ stats.kits_this_month }}</div>
+                            <div class="stat-label">Kits This Month</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-info">
+                            <div class="stat-number">KES {{ stats.revenue_this_month | round(0) }}</div>
+                            <div class="stat-label">Revenue This Month</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">⚠️</div>
+                        <div class="stat-info">
+                            <div class="stat-number">{{ stats.health_alerts }}</div>
+                            <div class="stat-label">Health Alerts</div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Recent Activity -->
+                <section class="activity-section">
+                    <h2>Recent Activity</h2>
+                    <div class="activity-list">
+                        {% for activity in recent_activities %}
+                        <div class="activity-item">
+                            <div class="activity-icon">{{ activity.icon }}</div>
+                            <div class="activity-content">
+                                <div class="activity-title">{{ activity.title }}</div>
+                                <div class="activity-time">{{ activity.time }}</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </section>
+                
+                <!-- Pending Decisions -->
+                <section class="decisions-section">
+                    <h2>Pending Decision Outcomes</h2>
+                    <div class="decisions-list">
+                        {% for decision in pending_decisions %}
+                        <div class="decision-item">
+                            <div class="decision-category">{{ decision.category }}</div>
+                            <div class="decision-title">{{ decision.title }}</div>
+                            <div class="decision-date">{{ decision.decision_date }}</div>
+                            <button class="btn-add-outcome" onclick="addOutcome('{{ decision.id }}')">
+                                Add Outcome
+                            </button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </section>
+                
+                <!-- Quick Actions -->
+                <section class="quick-actions">
+                    <h2>Quick Actions</h2>
+                    <div class="actions-grid">
+                        <a href="{{ url_for('admin.rabbits') }}" class="action-card">
+                            <div class="action-icon">➕</div>
+                            <div class="action-text">Add Rabbit</div>
+                        </a>
+                        <a href="{{ url_for('admin.feeding') }}" class="action-card">
+                            <div class="action-icon">🌿</div>
+                            <div class="action-text">Record Feeding</div>
+                        </a>
+                        <a href="{{ url_for('admin.health') }}" class="action-card">
+                            <div class="action-icon">🩺</div>
+                            <div class="action-text">Log Health</div>
+                        </a>
+                        <a href="{{ url_for('admin.decisions') }}" class="action-card">
+                            <div class="action-icon">🧠</div>
+                            <div class="action-text">Record Decision</div>
+                        </a>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/admin/sidebar.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/admin/dashboard.js') }}"></script>
+</body>
+</html>

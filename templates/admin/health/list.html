@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health - Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/sidebar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/health/list.css') }}">
+</head>
+<body>
+    <div class="admin-layout">
+        {% include 'admin/sidebar.html' %}
+        
+        <main class="main-content">
+            <header class="main-header">
+                <h1>Health Management</h1>
+                <div class="header-actions">
+                    <button class="btn-primary" onclick="openModal('add-health-modal')">
+                        <span class="btn-icon">➕</span>
+                        Log Health Record
+                    </button>
+                </div>
+            </header>
+            
+            <div class="content-section">
+                <!-- Health Alerts -->
+                <section class="alerts-section">
+                    <div class="section-header">
+                        <h2>Active Health Alerts</h2>
+                        <div class="alerts-actions">
+                            <button class="btn-secondary" onclick="dismissAllAlerts()">
+                                Dismiss All
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="alerts-grid">
+                        {% for alert in health_alerts %}
+                        <div class="alert-card alert-{{ alert.severity }}" data-alert-id="{{ alert.id }}">
+                            <div class="alert-header">
+                                <div class="alert-icon">{{ alert.icon }}</div>
+                                <div class="alert-title">{{ alert.title }}</div>
+                                <button class="alert-dismiss" onclick="dismissAlert('{{ alert.id }}')">&times;</button>
+                            </div>
+                            <div class="alert-content">
+                                <div class="alert-message">{{ alert.message }}</div>
+                                <div class="alert-rabbit">Rabbit: {{ alert.rabbit_id }}</div>
+                                <div class="alert-time">{{ alert.time }}</div>
+                            </div>
+                            <div class="alert-actions">
+                                <button class="btn-primary" onclick="viewRabbitHealth('{{ alert.rabbit_id }}')">
+                                    <span class="btn-icon">👁️</span>
+                                    View Health
+                                </button>
+                                <button class="btn-secondary" onclick="recordTreatment('{{ alert.rabbit_id }}')">
+                                    <span class="btn-icon">💊</span>
+                                    Record Treatment
+                                </button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </section>
+                
+                <!-- Quick Stats -->
+                <section class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-number">{{ stats.active_health_issues }}</div>
+                        <div class="stat-label">Active Issues</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">{{ stats.treatments_today }}</div>
+                        <div class="stat-label">Treatments Today</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">{{ stats.vaccinations_due }}</div>
+                        <div class="stat-label">Vaccinations Due</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">{{ stats.health_score }}%</div>
+                        <div class="stat-label">Overall Health Score</div>
+                    </div>
+                </section>
+                
+                <!-- Recent Health Records -->
+                <section class="records-section">
+                    <div class="section-header">
+                        <h2>Recent Health Records</h2>
+                        <div class="records-actions">
+                            <select id="severity-filter">
+                                <option value="">All Severity</option>
+                                <option value="critical">Critical</option>
+                                <option value="high">High</option>
+                                <option value="medium">Medium</option>
+                                <option value="low">Low</option>
+                            </select>
+                            <select id="outcome-filter">
+                                <option value="">All Outcomes</option>
+                                <option value="recovered">Recovered</option>
+                                <option value="ongoing">Ongoing</option>
+                                <option value="deceased">Deceased</option>
+                            </select>
+                            <button class="btn-secondary" onclick="exportRecords()">
+                                <span class="btn-icon">📥</span>
+                                Export
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="health-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Rabbit ID</th>
+                                    <th>Symptoms</th>
+                                    <th>Diagnosis</th>
+                                    <th>Treatment</th>
+                                    <th>Outcome</th>
+                                    <th>Veterinarian</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for record in health_records %}
+                                <tr>
+                                    <td>{{ record.treatment_date.strftime('%Y-%m-%d') }}</td>
+                                    <td>
+                                        <span class="rabbit-id">{{ record.rabbit_id }}</span>
+                                    </td>
+                                    <td>
+                                        <div class="symptoms-text" title="{{ record.symptoms }}">
+                                            {{ record.symptoms[:50] }}{% if record.symptoms|length > 50 %}...{% endif %}
+                                        </div>
+                                    </td>
+                                    <td>{{ record.diagnosis or 'Pending' }}</td>
+                                    <td>{{ record.treatment_given or 'None' }}</td>
+                                    <td>
+                                        <span class="outcome-badge outcome-{{ record.outcome or 'ongoing' }}">
+                                            {{ (record.outcome or 'Ongoing').title() }}
+                                        </span>
+                                    </td>
+                                    <td>{{ record.veterinarian or 'Staff' }}</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-view" onclick="viewDetails('{{ record.id }}')" title="View">
+                                                👁️
+                                            </button>
+                                            <button class="btn-edit" onclick="editRecord('{{ record.id }}')" title="Edit">
+                                                ✏️
+                                            </button>
+                                            <button class="btn-delete" onclick="deleteRecord('{{ record.id }}')" title="Delete">
+                                                🗑️
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                
+                <!-- Vaccination Schedule -->
+                <section class="vaccination-section">
+                    <div class="section-header">
+                        <h2>Vaccination Schedule</h2>
+                        <div class="vaccination-actions">
+                            <button class="btn-primary" onclick="scheduleVaccinations()">
+                                <span class="btn-icon">💉</span>
+                                Schedule Vaccinations
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="vaccination-grid">
+                        {% for vaccination in upcoming_vaccinations %}
+                        <div class="vaccination-card {{ 'overdue' if vaccination.is_overdue else 'due-soon' if vaccination.is_due_soon else 'scheduled' }}" data-vaccination-id="{{ vaccination.id }}">
+                            <div class="vaccination-header">
+                                <div class="vaccination-rabbit">{{ vaccination.rabbit_id }}</div>
+                                <div class="vaccination-status">
+                                    {% if vaccination.is_overdue %}
+                                    <span class="status-badge status-overdue">⚠️ Overdue</span>
+                                    {% elif vaccination.is_due_soon %}
+                                    <span class="status-badge status-due">💉 Due Soon</span>
+                                    {% else %}
+                                    <span class="status-badge status-scheduled">📅 Scheduled</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="vaccination-details">
+                                <div class="detail-row">
+                                    <span class="detail-label">Vaccine:</span>
+                                    <span class="detail-value">{{ vaccination.vaccine_type }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Due Date:</span>
+                                    <span class="detail-value">{{ vaccination.due_date.strftime('%Y-%m-%d') }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Age Group:</span>
+                                    <span class="detail-value">{{ vaccination.age_group }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="vaccination-actions">
+                                <button class="btn-primary" onclick="recordVaccination('{{ vaccination.id }}')">
+                                    <span class="btn-icon">💉</span>
+                                    Record Vaccination
+                                </button>
+                                <button class="btn-secondary" onclick="scheduleReminder('{{ vaccination.id }}')">
+                                    <span class="btn-icon">🔔</span>
+                                    Set Reminder
+                                </button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Add Health Record Modal -->
+    <div id="add-health-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Log Health Record</h3>
+                <button class="modal-close" onclick="closeModal('add-health-modal')">&times;</button>
+            </div>
+            <form class="modal-form" id="add-health-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="rabbit-select">Rabbit *</label>
+                        <select id="rabbit-select" name="rabbit_id" required>
+                            <option value="">Select Rabbit</option>
+                            {% for rabbit in active_rabbits %}
+                            <option value="{{ rabbit.id }}">{{ rabbit.rabbit_id }} - {{ rabbit.breed }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="treatment-date">Treatment Date *</label>
+                        <input type="date" id="treatment-date" name="treatment_date" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="symptoms">Symptoms *</label>
+                    <textarea id="symptoms" name="symptoms" rows="3" required placeholder="Describe the symptoms observed..."></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="diagnosis">Diagnosis</label>
+                        <input type="text" id="diagnosis" name="diagnosis" placeholder="Diagnosis if known...">
+                    </div>
+                    <div class="form-group">
+                        <label for="treatment-given">Treatment Given</label>
+                        <input type="text" id="treatment-given" name="treatment_given" placeholder="Treatment administered...">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="medication">Medication</label>
+                        <input type="text" id="medication" name="medication" placeholder="Medication name...">
+                    </div>
+                    <div class="form-group">
+                        <label for="dosage">Dosage</label>
+                        <input type="text" id="dosage" name="dosage" placeholder="Dosage information...">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="veterinarian">Veterinarian</label>
+                        <input type="text" id="veterinarian" name="veterinarian" placeholder="Veterinarian name...">
+                    </div>
+                    <div class="form-group">
+                        <label for="outcome">Outcome</label>
+                        <select id="outcome" name="outcome">
+                            <option value="ongoing">Ongoing</option>
+                            <option value="recovered">Recovered</option>
+                            <option value="deceased">Deceased</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="follow-up-date">Follow-up Date</label>
+                        <input type="date" id="follow-up-date" name="follow_up_date">
+                    </div>
+                    <div class="form-group">
+                        <label for="follow-up-required">Follow-up Required</label>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="follow-up-required" name="follow_up_required">
+                            <label for="follow-up-required">Schedule follow-up</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="notes">Notes</label>
+                    <textarea id="notes" name="notes" rows="3" placeholder="Additional notes..."></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('add-health-modal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Log Health Record</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/admin/sidebar.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/admin/health/list.js') }}"></script>
+</body>
+</html>

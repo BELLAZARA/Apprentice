@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <meta name="description" content="Komu Rabbit Enterprise — Decision Intelligence System. Manage animals, decisions, health, sales and reports from one place." />
+
+  <title>Komu Rabbit DIS — Decision Intelligence System</title>
+
+
+
+  <!-- Fonts preloaded -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+
+
+  <!-- Stylesheets -->
+
+  <link rel="stylesheet" href="static/css/main.css" />
+
+  <link rel="stylesheet" href="static/css/dashboard.css" />
+
+</head>
+
+
+
+<body>
+
+
+
+  <!-- ══════════════════════════════════════════════
+
+       NAVBAR
+
+  ══════════════════════════════════════════════ -->
+
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+
+    <div class="container">
+
+      <div class="navbar-inner">
+
+
+
+        <a class="navbar-brand" href="#" aria-label="Komu Rabbit DIS Home">
+
+          <div class="brand-icon" aria-hidden="true">🐇</div>
+
+          <div>
+
+            <div class="brand-name">Komu Rabbit</div>
+
+            <div class="brand-sub">Decision Intelligence System</div>
+
+          </div>
+
+        </a>
+
+
+
+        <ul class="nav-links" role="list">
+
+          <li><a href="#features">Features</a></li>
+
+          <li><a href="#roles">Who Uses It</a></li>
+
+          <li><a href="#reports">Reports</a></li>
+
+          <li><a href="#benefits">Benefits</a></li>
+
+        </ul>
+
+
+
+        <div class="nav-actions">
+
+          <a href="/login" class="btn btn-primary">Sign In</a>
+
+          <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+
+            <span></span><span></span><span></span>
+
+          </button>
+
+        </div>
+
+
+
+      </div>
+
+    </div>
+
+  </nav>
+
+
+
+
+
+  <!-- ══════════════════════════════════════════════
+
+       HERO
+
+  ══════════════════════════════════════════════ -->
+
+  <section class="section hero" id="hero">
+
+    <div class="container" style="display:contents;">
+
+
+
+      <!-- Left: copy -->
+
+      <div class="hero-content" style="padding-left: max(2rem, calc((100vw - 1200px)/2));">
+
+
+
+        <div class="hero-eyebrow" role="note">
+
+          Komu Rabbit Enterprise · Murang'a County
+
+        </div>
+
+
+
+        <h1 class="hero-title">
+
+          Farm Intelligence,
+
+          <em>Finally Organised</em>
+
+        </h1>
+
+
+
+        <p class="hero-desc">
+
+          One digital system for every rabbit, decision, health record and sale on your farm. Stop guessing — start managing with real data.
+
+        </p>
+
+
+
+        <div class="hero-cta">
+
+          <a href="/login" class="btn btn-primary btn-lg">Access Dashboard</a>
+
+          <a href="#features" class="btn btn-outline btn-lg">See Features</a>
+
+        </div>
+
+
+
+        <div class="hero-stats" aria-label="Farm statistics">
+
+          <div class="stat-item">
+
+            <div class="stat-num">8+</div>
+
+            <div class="stat-label">Management Modules</div>
+
+          </div>
+
+          <div class="stat-item">
+
+            <div class="stat-num">8</div>
+
+            <div class="stat-label">Report Types</div>
+
+          </div>
+
+          <div class="stat-item">
+
+            <div class="stat-num">3</div>
+
+            <div class="stat-label">User Roles</div>
+
+          </div>
+
+        </div>
+
+
+
+      </div>
+
+
+
+      <!-- Right: visual mockup -->
+
+      <div class="hero-visual" aria-hidden="true" style="padding-right: max(2rem, calc((100vw - 1200px)/2));">
+
+
+
+        <div class="hero-card-stack">
+
+
+
+          <!-- Floating chips -->
+
+          <div class="hero-chip chip-1">✅ 6 kits born today</div>
+
+          <div class="hero-chip chip-2">⚠️ 1 health alert</div>
+
+
+
+          <!-- Dashboard mockup card -->
+
+          <div class="dashboard-mockup">
+
+            <div class="mock-header">
+
+              <div class="mock-dots">
+
+                <span></span><span></span><span></span>
+
+              </div>
+
+              <div class="mock-title">KOMU DIS</div>
+
+            </div>
+
+
+
+            <div class="mock-body">
+
+              <div class="mock-greeting">Good morning, Farm Director</div>
+
+
+
+              <div class="mock-stats-row">
+
+                <div class="mock-stat">
+
+                  <div class="mock-stat-num">247</div>
+
+                  <div class="mock-stat-lbl">Rabbits</div>
+
+                </div>
+
+                <div class="mock-stat">
+
+                  <div class="mock-stat-num">18</div>
+
+                  <div class="mock-stat-lbl">Kits this month</div>
+
+                </div>
+
+                <div class="mock-stat">
+
+                  <div class="mock-stat-num">3</div>
+
+                  <div class="mock-stat-lbl">Health alerts</div>
+
+                </div>
+
+              </div>
+
+
+
+              <div class="mock-bar-chart">
+
+                <div class="mock-chart-label">Monthly Sales Revenue (KES)</div>
+
+                <div class="mock-bars">
+
+                  <div class="mock-bar"></div>
+
+                  <div class="mock-bar"></div>
+
+                  <div class="mock-bar"></div>
+
+                  <div class="mock-bar"></div>
+
+                  <div class="mock-bar"></div>
+
+                  <div class="mock-bar"></div>
+
+                  <div class="mock-bar"></div>
+
+                </div>
+
+              </div>
+
+
+
+              <div class="mock-incident-row">
+
+                <div class="mock-dot dot-orange"></div>
+
+                <div class="mock-incident-text">RBT-048 — Weight check due today</div>
+
+              </div>
+
+              <div class="mock-incident-row">
+
+                <div class="mock-dot dot-green"></div>
+
+                <div class="mock-incident-text">RBT-012 — Birth recorded, 6 survived</div>
+
+              </div>
+
+              <div class="mock-incident-row">
+
+                <div class="mock-dot dot-red"></div>
+
+                <div class="mock-incident-text">Block C — Health observation logged</div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+
+        </div>
+
+      </div>
+
+
+
+    </div>
+
+  </section>
+
+
+
+
+
+  <!-- ══════════════════════════════════════════════
+
+       STATS STRIP
+
+  ══════════════════════════════════════════════ -->
+
+  <div class="stats-strip" role="region" aria-label="Key metrics">
+
+    <div class="container">
+
+      <div class="grid-4" style="align-items:center;">
+
+        <div style="text-align:center;">
+
+          <div class="strip-stat-num" data-count="247" data-suffix="">247</div>
+
+          <div class="strip-stat-label">Rabbits tracked</div>
+
+        </div>
+
+        <div style="text-align:center;">
+
+          <div class="strip-stat-num" data-count="5" data-suffix="">5</div>
+
+          <div class="strip-stat-label">Decision categories</div>
+
+        </div>
+
+        <div style="text-align:center;">
+
+          <div class="strip-stat-num" data-count="8" data-suffix="">8</div>
+
+          <div class="strip-stat-label">Farm reports generated</div>
+
+        </div>
+
+        <div style="text-align:center;">
+
+          <div class="strip-stat-num" data-count="100" data-suffix="%">100%</div>
+
+          <div class="strip-stat-label">Records searchable</div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+
+
+  <!-- ══════════════════════════════════════════════
+
+       FEATURES
+
+  ══════════════════════════════════════════════ -->
+
+  <section class="section" id="features">
+
+    <div class="container">
+
+
+
+      <div class="features-intro">
+
+        <div class="section-label">What the system does</div>
+
+        <h2>Everything your farm needs, in one place</h2>
+
+        <div class="divider"></div>
+
+        <p style="color: var(--bark); font-weight: 300; font-size: 1.05rem; margin-top: 1rem;">
+
+          From the moment a rabbit is born to the day it is sold, every event is logged, searchable, and visible on your dashboard.
+
+        </p>
+
+      </div>
+
+
+
+      <div class="grid-3">
+
+
+
+        <div class="feature-card">
+
+          <div class="feature-icon">🐇</div>
+
+          <div class="feature-title">Animal Management</div>
+
+          <p class="feature-desc">Each rabbit gets a unique profile with its full life history — breeding, weight, health, and sales all linked to one ID.</p>
+
+        </div>
+
+
+
+        <div class="feature-card">
+
+          <div class="feature-icon">🧠</div>
+
+          <div class="feature-title">Decision Tracking</div>
+
+          <p class="feature-desc">Record every management decision with its date, category, justification, and the person responsible. Log outcomes later to learn what works.</p>
+
+        </div>
+
+
+
+        <div class="feature-card">
+
+          <div class="feature-icon">🌿</div>
+
+          <div class="feature-title">Feeding Records</div>
+
+          <p class="feature-desc">Log feed type, quantity, and cage or block for every feeding session. Track monthly feed costs automatically.</p>
+
+        </div>
+
+
+
+        <div class="feature-card">
+
+          <div class="feature-icon">💕</div>
+
+          <div class="feature-title">Breeding Events</div>
+
+          <p class="feature-desc">Record male-female pairings, expected birth dates, kits born, and kits survived. Identify your best breeding pairs over time.</p>
+
+        </div>
+
+
+
+        <div class="feature-card">
+
+          <div class="feature-icon">🩺</div>
+
+          <div class="feature-title">Health Monitoring</div>
+
+          <p class="feature-desc">Log symptoms, treatments, medications, and outcomes per rabbit. Get alerts for vaccinations due and isolate sick animals quickly.</p>
+
+        </div>
+
+
+
+        <div class="feature-card">
+
+          <div class="feature-icon">📈</div>
+
+          <div class="feature-title">Growth Tracking</div>
+
+          <p class="feature-desc">Record regular weight measurements per rabbit. Compare growth rates across breeds and ages to optimise your feeding strategy.</p>
+
+        </div>
+
+
+
+        <div class="feature-card">
+
+          <div class="feature-icon">💰</div>
+
+          <div class="feature-title">Sales & Revenue</div>
+
+          <p class="feature-desc">Record every sale with buyer name, weight, price, and payment status. See your best and worst months at a glance.</p>
+
+        </div>
+
+
+
+        <div class="feature-card">
+
+          <div class="feature-icon">📊</div>
+
+          <div class="feature-title">Reports & Analytics</div>
+
+          <p class="feature-desc">Eight report types covering breeding, health, growth, sales, feed, mortality, and decision outcomes — ready to view anytime.</p>
+
+        </div>
+
+
+
+        <div class="feature-card">
+
+          <div class="feature-icon">👥</div>
+
+          <div class="feature-title">Staff & Recruitment</div>
+
+          <p class="feature-desc">Record hiring decisions, assign duties, and track whether staffing choices improved farm performance over time.</p>
+
+        </div>
+
+
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+
+
+  <!-- ══════════════════════════════════════════════
+
+       ROLES
+
+  ══════════════════════════════════════════════ -->
+
+  <section class="section section--alt" id="roles">
+
+    <div class="container">
+
+
+
+      <div style="max-width: 540px; margin-bottom: 3rem;">
+
+        <div class="section-label">Who uses the system</div>
+
+        <h2>Three roles, one farm, full visibility</h2>
+
+        <div class="divider"></div>
+
+      </div>
+
+
+
+      <div class="grid-3">
+
+
+
+        <!-- Admin -->
+
+        <div class="role-card">
+
+          <div class="role-header">
+
+            <span class="role-badge badge-admin">Admin</span>
+
+            <div class="role-name">Farm Director</div>
+
+            <div class="role-sub">Full system access &amp; oversight</div>
+
+          </div>
+
+          <ul class="role-body">
+
+            <li class="role-perm">
+
+              <span class="perm-check">✓</span>
+
+              Review all reports and dashboards
+
+            </li>
+
+            <li class="role-perm">
+
+              <span class="perm-check">✓</span>
+
+              Oversee all decisions and outcomes
+
+            </li>
+
+            <li class="role-perm">
+
+              <span class="perm-check">✓</span>
+
+              Manage user accounts and roles
+
+            </li>
+
+            <li class="role-perm">
+
+              <span class="perm-check">✓</span>
+
+              Export data and generate full reports
+
+            </li>
+
+          </ul>
+
+        </div>
+
+
+
+        <!-- Manager -->
+
+        <div class="role-card">
+
+          <div class="role-header">
+
+            <span class="role-badge badge-manager">Manager</span>
+
+            <div class="role-name">Supervisor / Manager</div>
+
+            <div class="role-sub">Daily operations and records</div>
+
+          </div>
+
+          <ul class="role-body">
+
+            <li class="role-perm">
+
+              <span class="perm-check">✓</span>
+
+              Record daily animal events
+
+            </li>
+
+            <li class="role-perm">
+
+              <span class="perm-check">✓</span>
+
+              Log health observations and treatments
+
+            </li>
+
+            <li class="role-perm">
+
+              <span class="perm-check">✓</span>
+
+              Enter feeding and breeding records
+
+            </li>
+
+            <li class="role-perm">
+
+              <span class="perm-check">✓</span>
+
+              Record and update decision outcomes
+
+            </li>
+
+          </ul>
+
+        </div>
+
+
+
+        <!-- Staff -->
+
+        <div class="role-card">
+
+          <div class="role-header">
+
+            <span class="role-badge badge-staff">Staff</span>
+
+            <div class="role-name">Administrative Staff</div>
+
+            <div class="role-sub">Recruitment and staff records</div>
+
+          </div>
+
+          <ul class="role-body">
+
+            <li class="role-perm">
+
+              <span class="perm-check">✓</span>
+
+              Handle recruitment decisions
+
+            </li>
+
+            <li class="role-perm">
+
+              <span class="perm-check">✓</span>
+
+              Maintain staff records and duties
+
+            </li>
+
+            <li class="role-perm">
+
+              <span class="perm-check">✓</span>
+
+              View assigned module data
+
+            </li>
+
+            <li class="role-perm">
+
+              <span class="perm-check">✓</span>
+
+              Submit daily activity logs
+
+            </li>
+
+          </ul>
+
+        </div>
+
+
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+
+
+  <!-- ══════════════════════════════════════════════
+
+       REPORTS
+
+  ══════════════════════════════════════════════ -->
+
+  <section class="section" id="reports">
+
+    <div class="container">
+
+
+
+      <div style="max-width: 540px; margin-bottom: 3rem;">
+
+        <div class="section-label">Reports</div>
+
+        <h2>Eight reports, every corner of your farm</h2>
+
+        <div class="divider"></div>
+
+        <p style="color: var(--bark); font-weight: 300; margin-top: 1rem;">
+
+          Click any report type to see what's inside. All reports are generated from your live farm data.
+
+        </p>
+
+      </div>
+
+
+
+      <div class="reports-grid">
+
+
+
+        <div class="report-card" role="button" tabindex="0" aria-label="Farm Summary Report">
+
+          <span class="report-icon">🏡</span>
+
+          <div class="report-name">Farm Summary</div>
+
+          <p class="report-desc">Total rabbits, sales, and health incidents this month at a glance.</p>
+
+        </div>
+
+
+
+        <div class="report-card" role="button" tabindex="0" aria-label="Breeding Report">
+
+          <span class="report-icon">💕</span>
+
+          <div class="report-name">Breeding Report</div>
+
+          <p class="report-desc">Litter sizes, survival rates, and your best breeding pairs.</p>
+
+        </div>
+
+
+
+        <div class="report-card" role="button" tabindex="0" aria-label="Health Report">
+
+          <span class="report-icon">🩺</span>
+
+          <div class="report-name">Health Report</div>
+
+          <p class="report-desc">Most common illnesses, treatment success rates, and active alerts.</p>
+
+        </div>
+
+
+
+        <div class="report-card" role="button" tabindex="0" aria-label="Growth Report">
+
+          <span class="report-icon">📈</span>
+
+          <div class="report-name">Growth Report</div>
+
+          <p class="report-desc">Average weight by breed and age with monthly growth trends.</p>
+
+        </div>
+
+
+
+        <div class="report-card" role="button" tabindex="0" aria-label="Sales Report">
+
+          <span class="report-icon">💰</span>
+
+          <div class="report-name">Sales Report</div>
+
+          <p class="report-desc">Revenue trends, best months, and payment status overview.</p>
+
+        </div>
+
+
+
+        <div class="report-card" role="button" tabindex="0" aria-label="Feed Report">
+
+          <span class="report-icon">🌿</span>
+
+          <div class="report-name">Feed Report</div>
+
+          <p class="report-desc">Feed consumption per block and monthly cost tracking.</p>
+
+        </div>
+
+
+
+        <div class="report-card" role="button" tabindex="0" aria-label="Mortality Report">
+
+          <span class="report-icon">📋</span>
+
+          <div class="report-name">Mortality Report</div>
+
+          <p class="report-desc">Deaths by cause, date, and location — spot patterns early.</p>
+
+        </div>
+
+
+
+        <div class="report-card" role="button" tabindex="0" aria-label="Decision Outcome Report">
+
+          <span class="report-icon">🧠</span>
+
+          <div class="report-name">Decision Outcomes</div>
+
+          <p class="report-desc">Which decisions worked and which didn't — learn from your own history.</p>
+
+        </div>
+
+
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+
+
+  <!-- ══════════════════════════════════════════════
+
+       BENEFITS (BEFORE / AFTER)
+
+  ══════════════════════════════════════════════ -->
+
+  <section class="section section--alt" id="benefits">
+
+    <div class="container">
+
+
+
+      <div style="max-width: 540px; margin-bottom: 3rem;">
+
+        <div class="section-label">Benefits</div>
+
+        <h2>Before the system vs. after</h2>
+
+        <div class="divider"></div>
+
+      </div>
+
+
+
+      <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+
+        <table class="compare-table" role="table" aria-label="Before and after comparison">
+
+          <thead>
+
+            <tr>
+
+              <th scope="col">Situation</th>
+
+              <th scope="col">❌ Before the System</th>
+
+              <th scope="col">✅ After the System</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            <tr>
+
+              <td><strong>Decision memory</strong></td>
+
+              <td class="td-before">Decisions made verbally and forgotten</td>
+
+              <td class="td-after">Every decision written down with full details</td>
+
+            </tr>
+
+            <tr>
+
+              <td><strong>Justification</strong></td>
+
+              <td class="td-before">No record of why things were done</td>
+
+              <td class="td-after">Full justification saved for every decision</td>
+
+            </tr>
+
+            <tr>
+
+              <td><strong>Learning</strong></td>
+
+              <td class="td-before">Same mistakes repeated every year</td>
+
+              <td class="td-after">Learn from past outcomes using real data</td>
+
+            </tr>
+
+            <tr>
+
+              <td><strong>Accountability</strong></td>
+
+              <td class="td-before">No way to track who decided what</td>
+
+              <td class="td-after">Full accountability per person on record</td>
+
+            </tr>
+
+            <tr>
+
+              <td><strong>Planning</strong></td>
+
+              <td class="td-before">Planning based on guesswork</td>
+
+              <td class="td-after">Planning based on real farm data and trends</td>
+
+            </tr>
+
+            <tr>
+
+              <td><strong>Records safety</strong></td>
+
+              <td class="td-before">Papers get lost or destroyed</td>
+
+              <td class="td-after">Everything stored safely and fully searchable</td>
+
+            </tr>
+
+            <tr>
+
+              <td><strong>Animal history</strong></td>
+
+              <td class="td-before">No individual animal history</td>
+
+              <td class="td-after">Every rabbit has a complete life record</td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+
+
+    </div>
+
+  </section>
+
+
+
+
+
+  <!-- ══════════════════════════════════════════════
+
+       DAILY WORKFLOW HIGHLIGHT
+
+  ══════════════════════════════════════════════ -->
+
+  <section class="section">
+
+    <div class="container">
+
+
+
+      <div style="max-width: 540px; margin-bottom: 3rem;">
+
+        <div class="section-label">A typical day</div>
+
+        <h2>5 minutes. You know your farm.</h2>
+
+        <div class="divider"></div>
+
+      </div>
+
+
+
+      <div class="grid-2" style="gap: 1.25rem;">
+
+
+
+        <div class="card">
+
+          <div class="tag tag-sage" style="margin-bottom:.75rem;">🌅 Morning</div>
+
+          <h4>Supervisor arrives</h4>
+
+          <p style="font-size:.9rem; color:var(--bark); margin-top:.5rem;">
+
+            Notices rabbits in Block C look weak. Logs a health observation against those rabbit IDs — takes 60 seconds.
+
+          </p>
+
+        </div>
+
+
+
+        <div class="card">
+
+          <div class="tag tag-wheat" style="margin-bottom:.75rem;">☀️ Mid-Morning</div>
+
+          <h4>Feeding logged</h4>
+
+          <p style="font-size:.9rem; color:var(--bark); margin-top:.5rem;">
+
+            Worker feeds all blocks and records feed type and quantity per block. Monthly feed cost updates automatically.
+
+          </p>
+
+        </div>
+
+
+
+        <div class="card">
+
+          <div class="tag tag-clay" style="margin-bottom:.75rem;">🕐 Afternoon</div>
+
+          <h4>Birth outcome recorded</h4>
+
+          <p style="font-size:.9rem; color:var(--bark); margin-top:.5rem;">
+
+            Supervisor checks the breeding calendar. Female RBT-012 is due today. He records 7 kits born, 6 survived. Done.
+
+          </p>
+
+        </div>
+
+
+
+        <div class="card">
+
+          <div class="tag tag-sage" style="margin-bottom:.75rem;">🌆 End of Day</div>
+
+          <h4>Director reviews dashboard</h4>
+
+          <p style="font-size:.9rem; color:var(--bark); margin-top:.5rem;">
+
+            1 health incident. 6 new kits. Total feed used. 2 decisions awaiting outcome updates. Five minutes — complete farm visibility.
+
+          </p>
+
+        </div>
+
+
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+
+
+  <!-- ══════════════════════════════════════════════
+
+       CTA
+
+  ══════════════════════════════════════════════ -->
+
+  <section class="cta-section" id="contact">
+
+    <div class="container">
+
+      <div class="cta-label">Ready to get started?</div>
+
+      <h2 class="cta-title">Manage your farm<br>with evidence, not guesswork</h2>
+
+      <p class="cta-desc">
+
+        Sign in to access your dashboard, or contact the system administrator to set up your account.
+
+      </p>
+
+      <div class="cta-actions">
+
+        <a href="/login"    class="btn btn-primary btn-lg">Sign In Now</a>
+
+        <a href="#features" class="btn btn-ghost   btn-lg">Learn More</a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+
+
+  <!-- ══════════════════════════════════════════════
+
+       FOOTER
+
+  ══════════════════════════════════════════════ -->
+
+  <footer class="footer" role="contentinfo">
+
+    <div class="container">
+
+
+
+      <div class="footer-grid">
+
+
+
+        <div class="footer-brand">
+
+          <div class="navbar-brand">
+
+            <div class="brand-icon" aria-hidden="true">🐇</div>
+
+            <div>
+
+              <div class="brand-name">Komu Rabbit</div>
+
+              <div class="brand-sub" style="color:rgba(212,168,83,.7);">Decision Intelligence System</div>
+
+            </div>
+
+          </div>
+
+          <p>A smart, organised record system helping Komu Rabbit Enterprise manage the farm with evidence instead of guesswork.</p>
+
+        </div>
+
+
+
+        <div class="footer-col">
+
+          <h5>Modules</h5>
+
+          <ul>
+
+            <li><a href="/rabbits">Animals</a></li>
+
+            <li><a href="/feeding">Feeding</a></li>
+
+            <li><a href="/breeding">Breeding</a></li>
+
+            <li><a href="/health">Health</a></li>
+
+            <li><a href="/growth">Growth</a></li>
+
+          </ul>
+
+        </div>
+
+
+
+        <div class="footer-col">
+
+          <h5>Operations</h5>
+
+          <ul>
+
+            <li><a href="/sales">Sales</a></li>
+
+            <li><a href="/decisions">Decisions</a></li>
+
+            <li><a href="/outcomes">Outcomes</a></li>
+
+            <li><a href="/reports">Reports</a></li>
+
+          </ul>
+
+        </div>
+
+
+
+        <div class="footer-col">
+
+          <h5>Account</h5>
+
+          <ul>
+
+            <li><a href="/login">Sign In</a></li>
+
+            <li><a href="/dashboard">Dashboard</a></li>
+
+            <li><a href="/users">Manage Users</a></li>
+
+          </ul>
+
+        </div>
+
+
+
+      </div>
+
+
+
+      <div class="footer-bottom">
+
+        <span>© 2025 Komu Rabbit Enterprise. All rights reserved.</span>
+
+        <span style="font-family: var(--font-mono); font-size: .7rem; letter-spacing: .06em;">
+
+          KOMU DIS · v1.0
+
+        </span>
+
+      </div>
+
+
+
+    </div>
+
+  </footer>
+
+
+
+
+
+  <!-- Scripts -->
+
+  <script src="static/js/main.js"></script>
+
+  <script src="static/js/dashboard.js"></script>
+
+
+
+</body>
+
+</html>

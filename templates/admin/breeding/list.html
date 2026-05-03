@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breeding - Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/sidebar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/breeding/list.css') }}">
+</head>
+<body>
+    <div class="admin-layout">
+        {% include 'admin/sidebar.html' %}
+        
+        <main class="main-content">
+            <header class="main-header">
+                <h1>Breeding Management</h1>
+                <div class="header-actions">
+                    <button class="btn-primary" onclick="openModal('add-breeding-modal')">
+                        <span class="btn-icon">➕</span>
+                        Record Pairing
+                    </button>
+                </div>
+            </header>
+            
+            <div class="content-section">
+                <!-- Quick Stats -->
+                <section class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-number">{{ stats.active_pregnancies }}</div>
+                        <div class="stat-label">Active Pregnancies</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">{{ stats.births_this_month }}</div>
+                        <div class="stat-label">Births This Month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">{{ stats.kits_born }}</div>
+                        <div class="stat-label">Total Kits Born</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">{{ stats.survival_rate }}%</div>
+                        <div class="stat-label">Survival Rate</div>
+                    </div>
+                </section>
+                
+                <!-- Upcoming Births -->
+                <section class="births-section">
+                    <div class="section-header">
+                        <h2>Upcoming Births</h2>
+                        <div class="births-actions">
+                            <select id="birth-filter">
+                                <option value="">All Status</option>
+                                <option value="today">Due Today</option>
+                                <option value="overdue">Overdue</option>
+                                <option value="week">This Week</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="births-grid">
+                        {% for breeding in upcoming_births %}
+                        <div class="birth-card {{ 'due-today' if breeding.is_due_today() else 'overdue' if breeding.is_overdue() else 'upcoming' }}" data-breeding-id="{{ breeding.id }}">
+                            <div class="birth-header">
+                                <div class="breeding-pair">
+                                    <span class="rabbit-id">{{ breeding.male_rabbit_id }}</span>
+                                    <span class="pairing-icon">💕</span>
+                                    <span class="rabbit-id">{{ breeding.female_rabbit_id }}</span>
+                                </div>
+                                <div class="birth-status">
+                                    {% if breeding.is_due_today() %}
+                                    <span class="status-badge status-urgent">👶 Due Today</span>
+                                    {% elif breeding.is_overdue() %}
+                                    <span class="status-badge status-overdue">⚠️ Overdue</span>
+                                    {% else %}
+                                    <span class="status-badge status-normal">📅 {{ breeding.get_days_until_birth() }} days</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="birth-details">
+                                <div class="detail-row">
+                                    <span class="detail-label">Pairing Date:</span>
+                                    <span class="detail-value">{{ breeding.pairing_date.strftime('%Y-%m-%d') }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Expected Birth:</span>
+                                    <span class="detail-value">{{ breeding.expected_birth_date.strftime('%Y-%m-%d') }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Days Until Birth:</span>
+                                    <span class="detail-value">{{ breeding.get_days_until_birth() }} days</span>
+                                </div>
+                            </div>
+                            
+                            <div class="birth-actions">
+                                {% if breeding.is_due_today() or breeding.is_overdue() %}
+                                <button class="btn-primary" onclick="recordBirth('{{ breeding.id }}')">
+                                    <span class="btn-icon">👶</span>
+                                    Record Birth
+                                </button>
+                                {% endif %}
+                                <button class="btn-secondary" onclick="viewDetails('{{ breeding.id }}')">
+                                    <span class="btn-icon">👁️</span>
+                                    Details
+                                </button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </section>
+                
+                <!-- Recent Breeding Records -->
+                <section class="records-section">
+                    <div class="section-header">
+                        <h2>Recent Breeding Records</h2>
+                        <div class="records-actions">
+                            <select id="status-filter">
+                                <option value="">All Status</option>
+                                <option value="pregnant">Pregnant</option>
+                                <option value="birthed">Birthed</option>
+                                <option value="failed">Failed</option>
+                            </select>
+                            <button class="btn-secondary" onclick="exportRecords()">
+                                <span class="btn-icon">📥</span>
+                                Export
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="breeding-table">
+                            <thead>
+                                <tr>
+                                    <th>Pairing Date</th>
+                                    <th>Male</th>
+                                    <th>Female</th>
+                                    <th>Expected Birth</th>
+                                    <th>Actual Birth</th>
+                                    <th>Kits Born</th>
+                                    <th>Kits Survived</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for breeding in recent_breedings %}
+                                <tr>
+                                    <td>{{ breeding.pairing_date.strftime('%Y-%m-%d') }}</td>
+                                    <td>
+                                        <span class="rabbit-id">{{ breeding.male_rabbit_id }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="rabbit-id">{{ breeding.female_rabbit_id }}</span>
+                                    </td>
+                                    <td>{{ breeding.expected_birth_date.strftime('%Y-%m-%d') }}</td>
+                                    <td>
+                                        {% if breeding.actual_birth_date %}
+                                        {{ breeding.actual_birth_date.strftime('%Y-%m-%d') }}
+                                        {% else %}
+                                        <span class="pending">Pending</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if breeding.kits_born %}
+                                        {{ breeding.kits_born }}
+                                        {% else %}
+                                        <span class="pending">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if breeding.kits_survived %}
+                                        {{ breeding.kits_survived }}
+                                        {% else %}
+                                        <span class="pending">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="status-badge status-{{ breeding.status }}">
+                                            {{ breeding.status.title() }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-view" onclick="viewDetails('{{ breeding.id }}')" title="View">
+                                                👁️
+                                            </button>
+                                            {% if breeding.status == 'pregnant' %}
+                                            <button class="btn-edit" onclick="recordBirth('{{ breeding.id }}')" title="Record Birth">
+                                                👶
+                                            </button>
+                                            {% endif %}
+                                            <button class="btn-delete" onclick="deleteBreeding('{{ breeding.id }}')" title="Delete">
+                                                🗑️
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Add Breeding Modal -->
+    <div id="add-breeding-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Record Breeding Pairing</h3>
+                <button class="modal-close" onclick="closeModal('add-breeding-modal')">&times;</button>
+            </div>
+            <form class="modal-form" id="add-breeding-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="male-rabbit">Male Rabbit *</label>
+                        <select id="male-rabbit" name="male_rabbit_id" required>
+                            <option value="">Select Male Rabbit</option>
+                            {% for rabbit in male_rabbits %}
+                            <option value="{{ rabbit.id }}">{{ rabbit.rabbit_id }} - {{ rabbit.breed }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="female-rabbit">Female Rabbit *</label>
+                        <select id="female-rabbit" name="female_rabbit_id" required>
+                            <option value="">Select Female Rabbit</option>
+                            {% for rabbit in female_rabbits %}
+                            <option value="{{ rabbit.id }}">{{ rabbit.rabbit_id }} - {{ rabbit.breed }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="pairing-date">Pairing Date *</label>
+                        <input type="date" id="pairing-date" name="pairing_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="expected-birth-date">Expected Birth Date *</label>
+                        <input type="date" id="expected-birth-date" name="expected_birth_date" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="notes">Notes</label>
+                    <textarea id="notes" name="notes" rows="3" placeholder="Additional notes about the pairing..."></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('add-breeding-modal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Record Pairing</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Record Birth Modal -->
+    <div id="record-birth-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Record Birth</h3>
+                <button class="modal-close" onclick="closeModal('record-birth-modal')">&times;</button>
+            </div>
+            <form class="modal-form" id="record-birth-form">
+                <input type="hidden" id="birth-breeding-id" name="breeding_id">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="actual-birth-date">Actual Birth Date *</label>
+                        <input type="date" id="actual-birth-date" name="actual_birth_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="kits-born">Kits Born *</label>
+                        <input type="number" id="kits-born" name="kits_born" required min="0">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="kits-survived">Kits Survived *</label>
+                        <input type="number" id="kits-survived" name="kits_survived" required min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="birth-status">Birth Status</label>
+                        <select id="birth-status" name="status">
+                            <option value="birthed">Birthed</option>
+                            <option value="failed">Failed</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="birth-notes">Birth Notes</label>
+                    <textarea id="birth-notes" name="birth_notes" rows="3" placeholder="Details about the birth, complications, etc..."></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('record-birth-modal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Record Birth</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/admin/sidebar.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/admin/breeding/list.js') }}"></script>
+</body>
+</html>

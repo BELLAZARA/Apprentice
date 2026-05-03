@@ -1,0 +1,74 @@
+<div class="sidebar">
+    <div class="sidebar-header">
+        <div class="brand-icon">🐇</div>
+        <div class="brand-text">
+            <div class="brand-name">Komu Rabbit</div>
+            <div class="brand-sub">DIS Staff</div>
+        </div>
+    </div>
+    
+    <nav class="sidebar-nav">
+        <ul class="nav-list">
+            <li class="nav-item">
+                <a href="{{ url_for('staff.dashboard') }}" class="nav-link {% if request.endpoint == 'staff.dashboard' %}active{% endif %}">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+            </li>
+            
+            <li class="nav-section">
+                <span class="nav-section-title">Daily Operations</span>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('staff.rabbits') }}" class="nav-link {% if request.endpoint == 'staff.rabbits' %}active{% endif %}">
+                    <span class="nav-icon">🐇</span>
+                    <span class="nav-text">Rabbits</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('staff.feeding') }}" class="nav-link {% if request.endpoint == 'staff.feeding' %}active{% endif %}">
+                    <span class="nav-icon">🌿</span>
+                    <span class="nav-text">Feeding</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('staff.breeding') }}" class="nav-link {% if request.endpoint == 'staff.breeding' %}active{% endif %}">
+                    <span class="nav-icon">💕</span>
+                    <span class="nav-text">Breeding</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('staff.health') }}" class="nav-link {% if request.endpoint == 'staff.health' %}active{% endif %}">
+                    <span class="nav-icon">🩺</span>
+                    <span class="nav-text">Health</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('staff.growth') }}" class="nav-link {% if request.endpoint == 'staff.growth' %}active{% endif %}">
+                    <span class="nav-icon">📈</span>
+                    <span class="nav-text">Growth</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('staff.sales') }}" class="nav-link {% if request.endpoint == 'staff.sales' %}active{% endif %}">
+                    <span class="nav-icon">💰</span>
+                    <span class="nav-text">Sales</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    
+    <div class="sidebar-footer">
+        <div class="user-info">
+            <div class="user-avatar">{{ current_user.full_name[0] }}</div>
+            <div class="user-details">
+                <div class="user-name">{{ current_user.full_name }}</div>
+                <div class="user-role">{{ current_user.role.title() }}</div>
+            </div>
+        </div>
+        <a href="{{ url_for('auth.logout') }}" class="logout-btn">
+            <span class="logout-icon">🚪</span>
+            <span class="logout-text">Logout</span>
+        </a>
+    </div>
+</div>

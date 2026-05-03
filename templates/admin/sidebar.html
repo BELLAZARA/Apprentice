@@ -1,0 +1,127 @@
+<div class="sidebar">
+    <div class="sidebar-header">
+        <div class="brand-icon">🐇</div>
+        <div class="brand-text">
+            <div class="brand-name">Komu Rabbit</div>
+            <div class="brand-sub">DIS Admin</div>
+        </div>
+    </div>
+    
+    <nav class="sidebar-nav">
+        <ul class="nav-list">
+            <li class="nav-item">
+                <a href="{{ url_for('admin.dashboard') }}" class="nav-link {% if request.endpoint == 'admin.dashboard' %}active{% endif %}">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+            </li>
+            
+            <li class="nav-section">
+                <span class="nav-section-title">Animal Management</span>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('admin.rabbits') }}" class="nav-link {% if request.endpoint == 'admin.rabbits' %}active{% endif %}">
+                    <span class="nav-icon">🐇</span>
+                    <span class="nav-text">Rabbits</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('admin.feeding') }}" class="nav-link {% if request.endpoint == 'admin.feeding' %}active{% endif %}">
+                    <span class="nav-icon">🌿</span>
+                    <span class="nav-text">Feeding</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('admin.breeding') }}" class="nav-link {% if request.endpoint == 'admin.breeding' %}active{% endif %}">
+                    <span class="nav-icon">💕</span>
+                    <span class="nav-text">Breeding</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('admin.health') }}" class="nav-link {% if request.endpoint == 'admin.health' %}active{% endif %}">
+                    <span class="nav-icon">🩺</span>
+                    <span class="nav-text">Health</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('admin.growth') }}" class="nav-link {% if request.endpoint == 'admin.growth' %}active{% endif %}">
+                    <span class="nav-icon">📈</span>
+                    <span class="nav-text">Growth</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('admin.sales') }}" class="nav-link {% if request.endpoint == 'admin.sales' %}active{% endif %}">
+                    <span class="nav-icon">💰</span>
+                    <span class="nav-text">Sales</span>
+                </a>
+            </li>
+            
+            <li class="nav-section">
+                <span class="nav-section-title">Decision Management</span>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('admin.decisions') }}" class="nav-link {% if request.endpoint == 'admin.decisions' %}active{% endif %}">
+                    <span class="nav-icon">🧠</span>
+                    <span class="nav-text">Decisions</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('admin.outcomes') }}" class="nav-link {% if request.endpoint == 'admin.outcomes' %}active{% endif %}">
+                    <span class="nav-icon">📋</span>
+                    <span class="nav-text">Outcomes</span>
+                </a>
+            </li>
+            
+            <li class="nav-section">
+                <span class="nav-section-title">Reports</span>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('admin.reports') }}" class="nav-link {% if request.endpoint == 'admin.reports' %}active{% endif %}">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Reports</span>
+                </a>
+            </li>
+            
+            <li class="nav-section">
+                <span class="nav-section-title">System</span>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('admin.users') }}" class="nav-link {% if request.endpoint == 'admin.users' %}active{% endif %}">
+                    <span class="nav-icon">👥</span>
+                    <span class="nav-text">Users</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    
+    <div class="sidebar-footer">
+        {% if current_user is defined and current_user is not none and current_user is not string %}
+            {% if current_user.is_authenticated is defined and current_user.is_authenticated %}
+                {% if current_user.full_name is defined and current_user.full_name %}
+                    {% set display_name = current_user.full_name %}
+                {% elif current_user.username is defined and current_user.username %}
+                    {% set display_name = current_user.username %}
+                {% else %}
+                    {% set display_name = 'User' %}
+                {% endif %}
+                <div class="user-info">
+                    <div class="user-avatar">{{ display_name[0] | upper }}</div>
+                    <div class="user-details">
+                        <div class="user-name">{{ display_name }}</div>
+                        <div class="user-role">
+                            {% if current_user.role is defined and current_user.role %}
+                                {{ current_user.role.title() }}
+                            {% else %}
+                                Admin
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <a href="{{ url_for('auth.logout') }}" class="logout-btn">
+                    <span class="logout-icon">🚪</span>
+                    <span class="logout-text">Logout</span>
+                </a>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
